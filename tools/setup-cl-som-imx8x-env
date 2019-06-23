@@ -1,0 +1,10 @@
+MACHINE=cl-som-imx8x
+DISTRO=${DISTRO:-fsl-imx-xwayland}
+
+. fsl-setup-release.sh $@
+
+declare -a ENVIRONMENT=('../sources/meta-compulab-bsp/meta-cl-som-imx8x/tools/setup-compulab-env')
+
+for env in ${ENVIRONMENT[@]};do
+	[ -f ${env} ] && FORCE=Yes source ${env}
+done
