@@ -16,6 +16,16 @@ eof
 
 # Main #
 
+# Modify bblayers.conf
+mod_bblayer() {
+# A mandatory bsp layer: kernel
+cat << eof | tee -a ${BBLAYERS_CONF} > /dev/null
+BBLAYERS += " \\
+	\${BSPDIR}/sources/meta-compulab-bsp/meta-cl-som-imx8x \\
+"
+eof
+}
+
 CWD=$(pwd)
 PROGNAME=${BASH_SOURCE[0]}
 [ $(basename -- $BASH_SOURCE) == $(basename -- $0) ] && EXIT="exit" || EXIT="return"
@@ -50,6 +60,7 @@ cat << eom
 eom
 
 mod_local
+mod_bblayer
 
 cat << eom
     Note: Files ${BBLAYERS_CONF} and ${LOCAL_CONF} updated successfully.
