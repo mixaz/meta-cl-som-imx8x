@@ -1,0 +1,31 @@
+From 4725f9aa8765ccb9c14841e611847890876b976e Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Mon, 22 Jul 2019 15:46:16 +0300
+Subject: [PATCH 08/23] flexspi: disable flexspi0 init in U-Boot (flexspi0 was
+ initialized in SPL)
+
+Signed-off-by: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+---
+ board/compulab/cl-som-imx8x/cl-som-imx8x.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/board/compulab/cl-som-imx8x/cl-som-imx8x.c b/board/compulab/cl-som-imx8x/cl-som-imx8x.c
+index 7a4f98493b..c0859894b9 100644
+--- a/board/compulab/cl-som-imx8x/cl-som-imx8x.c
++++ b/board/compulab/cl-som-imx8x/cl-som-imx8x.c
+@@ -665,9 +665,9 @@ int board_init(void)
+ 	setup_fec(CONFIG_FEC_ENET_DEV);
+ #endif
+ 
+-#if (CONFIG_SPL_SPI_SUPPORT == 1)
+-	flexspi0_init();
+-#endif
++//#if (CONFIG_SPL_SPI_SUPPORT == 1)
++//	flexspi0_init();
++//#endif
+ 
+ 	return 0;
+ }
+-- 
+2.11.0
+

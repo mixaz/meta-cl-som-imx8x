@@ -1,0 +1,32 @@
+From da87bd3ee52b7a09ccdc468a5c3730ce51d580f5 Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Wed, 31 Jul 2019 16:55:11 +0300
+Subject: [PATCH 13/23] flexspi: Set correct Erase sector size and offset for
+ U-Boot env on SPI
+
+Signed-off-by: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+---
+ include/configs/cl-som-imx8x.h | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/include/configs/cl-som-imx8x.h b/include/configs/cl-som-imx8x.h
+index 153b0943ea..384bfdac45 100644
+--- a/include/configs/cl-som-imx8x.h
++++ b/include/configs/cl-som-imx8x.h
+@@ -318,10 +318,10 @@
+ 
+ 
+ /* Default environment is in SD */
+-#define CONFIG_ENV_SIZE			0x2000
++#define CONFIG_ENV_SIZE			0x8000
+ #ifdef CONFIG_QSPI_BOOT
+-#define CONFIG_ENV_OFFSET       (4 * 1024 * 1024)
+-#define CONFIG_ENV_SECT_SIZE	(128 * 1024)
++#define CONFIG_ENV_OFFSET       (FSL_FSPI_FLASH_SIZE - (2 * CONFIG_ENV_SIZE)) /* Should be aligned 0x10000 */
++#define CONFIG_ENV_SECT_SIZE	(4 * 1024)
+ #define CONFIG_ENV_SPI_BUS	CONFIG_SF_DEFAULT_BUS
+ #define CONFIG_ENV_SPI_CS	CONFIG_SF_DEFAULT_CS
+ #define CONFIG_ENV_SPI_MODE	CONFIG_SF_DEFAULT_MODE
+-- 
+2.11.0
+

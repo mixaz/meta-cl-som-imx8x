@@ -1,0 +1,68 @@
+From 7dd0529c02ae63bfd35854aeb36ebefd7e6f0c58 Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Thu, 1 Aug 2019 17:22:10 +0300
+Subject: [PATCH 15/23] cleanup spl.c
+
+---
+ board/compulab/cl-som-imx8x/spl.c | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
+
+diff --git a/board/compulab/cl-som-imx8x/spl.c b/board/compulab/cl-som-imx8x/spl.c
+index 79c9684dd7..08de091136 100644
+--- a/board/compulab/cl-som-imx8x/spl.c
++++ b/board/compulab/cl-som-imx8x/spl.c
+@@ -31,20 +31,12 @@
+ 
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+-#define _DEBUG 1
+-
+ #define ESDHC_PAD_CTRL	((SC_PAD_CONFIG_OUT_IN << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
+ 						| (SC_PAD_28FDSOI_DSE_DV_HIGH << PADRING_DSE_SHIFT) | (SC_PAD_28FDSOI_PS_PU << PADRING_PULL_SHIFT))
+ 
+ #define ESDHC_CLK_PAD_CTRL	((SC_PAD_CONFIG_OUT_IN << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
+ 						| (SC_PAD_28FDSOI_DSE_DV_HIGH << PADRING_DSE_SHIFT) | (SC_PAD_28FDSOI_PS_PD << PADRING_PULL_SHIFT))
+ 
+-#define ENET_INPUT_PAD_CTRL	((SC_PAD_CONFIG_OD_IN << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
+-						| (SC_PAD_28FDSOI_DSE_DV_HIGH << PADRING_DSE_SHIFT) | (SC_PAD_28FDSOI_PS_PU << PADRING_PULL_SHIFT))
+-
+-#define ENET_NORMAL_PAD_CTRL	((SC_PAD_CONFIG_NORMAL << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
+-						| (SC_PAD_28FDSOI_DSE_DV_HIGH << PADRING_DSE_SHIFT) | (SC_PAD_28FDSOI_PS_PU << PADRING_PULL_SHIFT))
+-
+ #define FSPI_PAD_CTRL	((SC_PAD_CONFIG_NORMAL << PADRING_CONFIG_SHIFT) | (SC_PAD_ISO_OFF << PADRING_LPCONFIG_SHIFT) \
+ 						| (SC_PAD_28FDSOI_DSE_DV_HIGH << PADRING_DSE_SHIFT) | (SC_PAD_28FDSOI_PS_PU << PADRING_PULL_SHIFT))
+ 
+@@ -231,20 +223,7 @@ void spl_board_init(void)
+ 
+ void spl_board_prepare_for_boot(void)
+ {
+-#if 0
+-	sc_ipc_t ipcHndl = 0;
+-	sc_err_t err = SC_ERR_NONE;
+ 
+-	ipcHndl = gd->arch.ipc_channel_handle;
+-	if ((err = sc_pm_set_resource_power_mode(ipcHndl, SC_R_FSPI_0, SC_PM_PW_MODE_OFF)) != SC_ERR_NONE)
+-	{
+-		debug("Warning: failed to turn off FSPI0 [ SC_ERR = %d ]\n", err);
+-	}
+-	else
+-	{
+-		puts("Success: FSPI0 is OFF\n");
+-	}
+-#endif
+ }
+ 
+ #ifdef CONFIG_SPL_LOAD_FIT
+@@ -274,6 +253,4 @@ void board_init_f(ulong dummy)
+ 	memset(__bss_start, 0, __bss_end - __bss_start);
+ 
+ 	board_init_r(NULL, 0);
+-}
+-
+-#define _DEBUG 0
+\ No newline at end of file
++}
+\ No newline at end of file
+-- 
+2.11.0
+

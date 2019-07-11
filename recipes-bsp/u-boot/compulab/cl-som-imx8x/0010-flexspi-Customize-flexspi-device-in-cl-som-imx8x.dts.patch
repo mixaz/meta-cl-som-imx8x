@@ -1,0 +1,37 @@
+From b1d70d1ada55fb61cf16df45e3bff191d6603de4 Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Mon, 22 Jul 2019 16:21:52 +0300
+Subject: [PATCH 10/23] flexspi: Customize flexspi device in cl-som-imx8x.dts
+
+Signed-off-by: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+---
+ arch/arm/dts/cl-som-imx8x.dts | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/dts/cl-som-imx8x.dts b/arch/arm/dts/cl-som-imx8x.dts
+index 183bc35745..f57ec6e7b8 100644
+--- a/arch/arm/dts/cl-som-imx8x.dts
++++ b/arch/arm/dts/cl-som-imx8x.dts
+@@ -219,7 +219,6 @@
+ 				SC_P_QSPI0A_DATA1_LSIO_QSPI0A_DATA1	0x0600004c
+ 				SC_P_QSPI0A_DATA2_LSIO_QSPI0A_DATA2	0x0600004c
+ 				SC_P_QSPI0A_DATA3_LSIO_QSPI0A_DATA3	0x0600004c
+-				SC_P_QSPI0A_DQS_LSIO_QSPI0A_DQS		0x0600004c
+ 				SC_P_QSPI0A_SS0_B_LSIO_QSPI0A_SS0_B	0x0600004c
+ 				SC_P_QSPI0A_SS1_B_LSIO_QSPI0A_SS1_B	0x0600004c
+ 				SC_P_QSPI0A_SCLK_LSIO_QSPI0A_SCLK	0x0600004c
+@@ -310,6 +309,11 @@
+ 		#size-cells = <1>;
+ 		compatible = "spi-flash";
+ 		spi-max-frequency = <29000000>;
++
++		partition@0 {
++			label = "raw";
++			reg = <0x0 0x200000>;
++		};
+ 	};
+ };
+ 
+-- 
+2.11.0
+

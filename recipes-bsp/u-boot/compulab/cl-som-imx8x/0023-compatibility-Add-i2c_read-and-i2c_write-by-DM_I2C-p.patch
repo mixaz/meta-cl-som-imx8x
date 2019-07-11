@@ -1,0 +1,86 @@
+From 9a9f58b17b31ce10acc1691c6d929779809d33ee Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Mon, 12 Aug 2019 20:41:26 +0300
+Subject: [PATCH 23/23] compatibility: Add i2c_read() and i2c_write() by DM_I2C
+ protocol
+
+Signed-off-by: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+---
+ cmd/eeprom.c | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+diff --git a/cmd/eeprom.c b/cmd/eeprom.c
+index c61b396a62..857106d1bf 100644
+--- a/cmd/eeprom.c
++++ b/cmd/eeprom.c
+@@ -23,6 +23,7 @@
+ #include <common.h>
+ #include <config.h>
+ #include <command.h>
++#include <dm.h>
+ #include <i2c.h>
+ #include <eeprom_layout.h>
+ 
+@@ -60,6 +61,59 @@
+ #endif
+ #endif
+ 
++static int cur_busnum __attribute__((section(".data")));
++
++static int i2c_set_bus_num(unsigned int bus)
++{
++	cur_busnum = bus;
++	return 0;
++}
++
++static int i2c_compat_get_device(uint chip_addr, int alen,
++				 struct udevice **devp)
++{
++	struct dm_i2c_chip *chip;
++	int ret;
++
++	ret = i2c_get_chip_for_busnum(cur_busnum, chip_addr, alen, devp);
++	if (ret)
++		return ret;
++	chip = dev_get_parent_platdata(*devp);
++	if (chip->offset_len != alen) {
++		printf("I2C chip %x: requested alen %d does not match chip offset_len %d\n",
++		       chip_addr, alen, chip->offset_len);
++		return -EADDRNOTAVAIL;
++	}
++
++	return 0;
++}
++
++int i2c_read(uint8_t chip_addr, unsigned int addr, int alen, uint8_t *buffer,
++	     int len)
++{
++	struct udevice *dev;
++	int ret;
++
++	ret = i2c_compat_get_device(chip_addr, alen, &dev);
++	if (ret)
++		return ret;
++
++	return dm_i2c_read(dev, addr, buffer, len);
++}
++
++int i2c_write(uint8_t chip_addr, unsigned int addr, int alen, uint8_t *buffer,
++	      int len)
++{
++	struct udevice *dev;
++	int ret;
++
++	ret = i2c_compat_get_device(chip_addr, alen, &dev);
++	if (ret)
++		return ret;
++
++	return dm_i2c_write(dev, addr, buffer, len);
++}
++
+ __weak int eeprom_write_enable(unsigned dev_addr, int state)
+ {
+ 	return 0;
+-- 
+2.11.0
+

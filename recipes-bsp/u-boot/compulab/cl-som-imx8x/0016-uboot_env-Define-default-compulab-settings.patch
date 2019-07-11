@@ -1,0 +1,52 @@
+From a586464965142952dbf218f73f3ae6d22196b416 Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Thu, 1 Aug 2019 17:27:16 +0300
+Subject: [PATCH 16/23] uboot_env: Define default compulab settings
+
+---
+ include/configs/cl-som-imx8x.h | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/include/configs/cl-som-imx8x.h b/include/configs/cl-som-imx8x.h
+index 384bfdac45..136aa6b7cc 100644
+--- a/include/configs/cl-som-imx8x.h
++++ b/include/configs/cl-som-imx8x.h
+@@ -210,8 +210,14 @@
+                 "run xenboot_common;" \
+             "\0" \
+ 
++#define COMPULAB_BOOT_ENV \
++	"autoload=off\0" \
++	"netboot=off\0" \
++	"fdt_file=sb-imx8x.dtb\0" \
++
+ /* Initial environment variables */
+ #define CONFIG_EXTRA_ENV_SETTINGS		\
++	COMPULAB_BOOT_ENV \
+ 	CONFIG_MFG_ENV_SETTINGS \
+ 	M4_BOOT_ENV \
+ 	XEN_BOOT_ENV \
+@@ -227,7 +233,6 @@
+ 	"cntr_addr=0x98000000\0"			\
+ 	"cntr_file=os_cntr_signed.bin\0" \
+ 	"boot_fdt=try\0" \
+-	"fdt_file=undefined\0" \
+ 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
+ 	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
+ 	"mmcroot=" CONFIG_MMCROOT " rootwait rw\0" \
+@@ -298,12 +303,10 @@
+ 			   "if test ${sec_boot} = yes; then " \
+ 				   "if run loadcntr; then " \
+ 					   "run mmcboot; " \
+-				   "else run netboot; " \
+ 				   "fi; " \
+ 			    "else " \
+ 				   "if run loadimage; then " \
+ 					   "run mmcboot; " \
+-				   "else run netboot; " \
+ 				   "fi; " \
+ 			 "fi; " \
+ 		   "fi; " \
+-- 
+2.11.0
+

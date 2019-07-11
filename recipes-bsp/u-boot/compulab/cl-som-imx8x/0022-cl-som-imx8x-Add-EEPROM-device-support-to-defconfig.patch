@@ -1,0 +1,28 @@
+From 8b85e007774baf5e263e81e6da9a3015abda6867 Mon Sep 17 00:00:00 2001
+From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+Date: Mon, 12 Aug 2019 20:35:57 +0300
+Subject: [PATCH 22/23] cl-som-imx8x: Add EEPROM device support to defconfig
+
+Signed-off-by: Igor Derzhavets <igor.derzhavets@compulab.co.il>
+---
+ configs/cl-som-imx8x_defconfig | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/configs/cl-som-imx8x_defconfig b/configs/cl-som-imx8x_defconfig
+index 67f56018cd..64945f5572 100644
+--- a/configs/cl-som-imx8x_defconfig
++++ b/configs/cl-som-imx8x_defconfig
+@@ -11,6 +11,10 @@ CONFIG_CMD_CACHE=y
+ CONFIG_DM_SERIAL=y
+ CONFIG_FSL_LPUART=y
+ CONFIG_OF_CONTROL=y
++CONFIG_CMD_EEPROM=y
++CONFIG_I2C_EEPROM=y
++CONFIG_EEPROM_LAYOUT_HELP_STRING="v2, v3, v4"
++CONFIG_CMD_EEPROM_LAYOUT=y
+ CONFIG_DM_I2C=y
+ # CONFIG_DM_I2C_COMPAT is not set
+ CONFIG_SYS_I2C_IMX_LPI2C=y
+-- 
+2.11.0
+
