@@ -11,6 +11,12 @@ LOCAL_CONF=conf/local.conf
 mod_local() {
 cat << eof | tee -a ${LOCAL_CONF} > /dev/null
 LICENSE_FLAGS_WHITELIST = "commercial"
+# Add Chromium
+IMAGE_INSTALL_append =										\\
+	"\${@bb.utils.contains('DISTRO_FEATURES', 'wayland', ' chromium-ozone-wayland',		\\
+		bb.utils.contains('DISTRO_FEATURES',     'x11', ' chromium-x11',		\\
+		'', d), d)									\\
+	}"
 eof
 }
 
