@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Select IMX-BOOT image
+RADIO=$(ls /boot/ | awk '(/imx-boot/)&&($0=$1" OFF ")' ORS="")
+SELECT=$(dialog --no-items --backtitle "Select a U-Boot file:" --radiolist "Available U-Boot files:" 12 80 12 ${RADIO} --stdout)
+[[ -z ${SELECT} ]] && exit
+IMX_BOOT=/boot/${SELECT}
+
+# Set constants
+IMX_DEV=$(cat /proc/mtd | awk 'BEGIN {FS=":"} /"uboot"/ {print $1}')
+IMX_SIZE=$(stat -c %s ${IMX_BOOT})
+IMX_PART_SIZE=0x$(cat /proc/mtd | awk '/"uboot"/ {print $2}')
+
+# Erase partition
+CMD="mtd_debug erase /dev/${IMX_DEV} 0 ${IMX_PART_SIZE}"
+${CMD} 2>&1 | dialog --backtitle "${CMD}" --programbox "U-Boot partition erase result:" 12 80
+
+# Write image
+CMD="mtd_debug write /dev/${IMX_DEV} 0 ${IMX_SIZE} ${IMX_BOOT}"
+${CMD} 2>&1 | dialog --backtitle "${CMD}" --programbox "U-Boot flash result:" 12 80
+
+exit 0

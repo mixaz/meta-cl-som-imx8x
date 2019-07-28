@@ -6,10 +6,24 @@ BB_CL_CONF_DONE=conf/bb_cl_conf.done
 LOCAL_CONF=conf/local.conf
 
 # Functions #
+get_meta_compulab() {
+meta_cpl_dir="../sources/meta-compulab"
+branch="devel"
+meta_url="https://github.com/compulab-yokneam/meta-compulab"
+if [[ -d ${meta_cpl_dir} ]];then
+git -C ${meta_cpl_dir} remote update
+git -C ${meta_cpl_dir} pull
+else
+git clone -b ${branch} ${meta_url} ${meta_cpl_dir}
+fi
+rm -rf ${meta_cpl_dir}/recipes-xfce
+rm -rf ${meta_cpl_dir}/recipes-browser
+}
 
 # Modify local.conf
 mod_local() {
 cat << eof | tee -a ${LOCAL_CONF} > /dev/null
+CORE_IMAGE_EXTRA_INSTALL+=" memtester cl-stest cl-uboot cl-deploy"
 LICENSE_FLAGS_WHITELIST = "commercial"
 # Add Chromium
 IMAGE_INSTALL_append =										\\
@@ -24,10 +38,13 @@ eof
 
 # Modify bblayers.conf
 mod_bblayer() {
+# Get CompuLab Main meta layer
+get_meta_compulab
 # A mandatory bsp layer: kernel
 cat << eof | tee -a ${BBLAYERS_CONF} > /dev/null
 BBLAYERS += " \\
 	\${BSPDIR}/sources/meta-compulab-bsp/meta-cl-som-imx8x \\
+	\${BSPDIR}/sources/meta-compulab \\
 "
 eof
 }
