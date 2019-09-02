@@ -1,0 +1,11 @@
+[Unit]
+Description=CL-SOM-iMX8X MIPI Panel Initialization Bug Work Around
+DefaultDependencies=no
+
+[Service]
+Type=oneshot
+RemainAfterExit=true
+ExecStart=/usr/sbin/mipi-panel-wa start
+
+[Install]
+RequiredBy=sysinit.target

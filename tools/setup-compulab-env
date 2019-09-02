@@ -23,7 +23,7 @@ rm -rf ${meta_cpl_dir}/recipes-browser
 # Modify local.conf
 mod_local() {
 cat << eof | tee -a ${LOCAL_CONF} > /dev/null
-CORE_IMAGE_EXTRA_INSTALL+=" cl-stest cl-uboot cl-deploy "
+CORE_IMAGE_EXTRA_INSTALL+=" cl-stest cl-uboot cl-deploy mipi-panel-wa "
 CORE_IMAGE_EXTRA_INSTALL+=" memtester htop iotop tmux iperf3 dhcp-client u-boot-fw-utils "
 LICENSE_FLAGS_WHITELIST = "commercial"
 # Add Chromium
