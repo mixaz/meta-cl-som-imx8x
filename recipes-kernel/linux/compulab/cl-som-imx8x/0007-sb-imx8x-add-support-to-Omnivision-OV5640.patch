@@ -1,0 +1,89 @@
+From c06ee810c2ebc33c9188c1e7dd1e4a50000add93 Mon Sep 17 00:00:00 2001
+From: Uri Mashiach <uri.mashiach@compulab.co.il>
+Date: Tue, 3 Sep 2019 17:54:04 +0300
+Subject: [PATCH 07/10] sb-imx8x: add support to Omnivision OV5640
+
+Omnivision OV5640 image sensor information:
+Documentation/devicetree/bindings/media/i2c/ov5640_mipi.txt
+
+Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
+---
+ arch/arm64/boot/dts/compulab/sb-imx8x.dts | 48 +++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/compulab/sb-imx8x.dts b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
+index c43f81471148..4482bf79cc8f 100644
+--- a/arch/arm64/boot/dts/compulab/sb-imx8x.dts
++++ b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
+@@ -43,6 +43,27 @@
+ 		#gpio-cells = <2>;
+ 		reg = <0x20>;
+ 	};
++
++	ov5640_mipi: ov5640_mipi@3c {
++		compatible = "ovti,ov5640_mipi_v3";
++		reg = <0x3c>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_mipi_csi0>;
++		clocks = <&clk IMX8QXP_CLK_DUMMY>;
++		clock-names = "csi_mclk";
++		csi_id = <0>;
++		pwn-gpios = <&pca9555 8 GPIO_ACTIVE_LOW>;
++		rst-gpios = <&pca9555 7 GPIO_ACTIVE_HIGH>;
++		mclk = <25000000>;
++		mclk_source = <0>;
++		mipi_csi;
++		status = "okay";
++		port {
++			ov5640_mipi_ep: endpoint {
++				remote-endpoint = <&mipi_csi0_ep>;
++			};
++		};
++	};
+ };
+ 
+ /* GPU */
+@@ -203,6 +224,27 @@
+ 	status = "okay";
+ };
+ 
++/* MIPI Camera */
++&mipi_csi_0 {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	status = "okay";
++	/delete-property/virtual-channel;
++
++	port@0 {
++		reg = <0>;
++		mipi_csi0_ep: endpoint {
++			remote-endpoint = <&ov5640_mipi_ep>;
++			data-lanes = <1 2>;
++		};
++	};
++};
++
++&isi_2 {
++	interface = <2 0 2>;
++	status = "okay";
++};
++
+ /* CAN bus */
+ &flexcan1 {
+ 	pinctrl-names = "default";
+@@ -279,6 +321,12 @@
+ 			>;
+ 		};
+ 
++		pinctrl_mipi_csi0: mipicsi0grp{
++			fsl,pins = <
++				SC_P_MIPI_CSI0_MCLK_OUT_MIPI_CSI0_ACM_MCLK_OUT  0xC0000041
++			>;
++		};
++
+ 		pinctrl_flexcan1: flexcan0grp {
+ 			fsl,pins = <
+ 				SC_P_FLEXCAN0_TX_ADMA_FLEXCAN0_TX		0x00000021
+-- 
+2.11.0
+

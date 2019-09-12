@@ -1,7 +1,7 @@
 From d70ed35addb3ff6256dbcf4ebc5bd78a7871d6cf Mon Sep 17 00:00:00 2001
 From: Uri Mashiach <uri.mashiach@compulab.co.il>
 Date: Thu, 23 May 2019 17:12:51 +0300
-Subject: [PATCH 1/2] cl-som-imx8x: add basic support
+Subject: [PATCH 01/10] cl-som-imx8x: add basic support
 
 Basic support for the CL-SOM-iMX8X module.
 The module is based on the NXP i.MX 8X, 1.2GHz SOC.
