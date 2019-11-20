@@ -1,0 +1,14 @@
+--- a/arch/arm64/boot/dts/compulab/sb-imx8x.dts
++++ b/arch/arm64/boot/dts/compulab/sb-imx8x.dts
+@@ -251,3 +251,11 @@
+	};
+ };
+
++&vpu {
++	status = "okay";
++};
++
++&vpu_decoder {
++	core_type = <1>;
++	status = "okay";
++};
