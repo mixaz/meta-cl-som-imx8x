@@ -1,4 +1,4 @@
-From 67ce7d5e427f251a1766d2b9698736198c414ffb Mon Sep 17 00:00:00 2001
+From 22fb5c64d802ddfdc9d5d5ef45aa894fc6d1bf45 Mon Sep 17 00:00:00 2001
 From: Igor Derzhavets <igor.derzhavets@compulab.co.il>
 Date: Thu, 1 Aug 2019 15:25:34 +0300
 Subject: [PATCH 5/6] cl-som-imx8x: Add CL-SOM-iMX8X board to U-Boot
@@ -12,9 +12,9 @@ Signed-off-by: Igor Derzhavets <igor.derzhavets@compulab.co.il>
  board/compulab/cl-som-imx8x/eeprom.c       | 133 ++++++
  board/compulab/cl-som-imx8x/eeprom.h       |  15 +
  board/compulab/cl-som-imx8x/spl.c          | 255 ++++++++++++
- configs/cl-som-imx8x_defconfig             | 101 +++++
- include/configs/cl-som-imx8x.h             | 363 +++++++++++++++++
- 9 files changed, 1908 insertions(+)
+ configs/cl-som-imx8x_defconfig             | 107 +++++
+ include/configs/cl-som-imx8x.h             | 312 ++++++++++++++
+ 9 files changed, 1863 insertions(+)
  create mode 100644 arch/arm/dts/cl-som-imx8x.dts
  create mode 100644 board/compulab/cl-som-imx8x/Kconfig
  create mode 100644 board/compulab/cl-som-imx8x/Makefile
@@ -1516,10 +1516,10 @@ index 0000000000..bb1dd0f335
 \ No newline at end of file
 diff --git a/configs/cl-som-imx8x_defconfig b/configs/cl-som-imx8x_defconfig
 new file mode 100644
-index 0000000000..175727020f
+index 0000000000..f8bc6a2c55
 --- /dev/null
 +++ b/configs/cl-som-imx8x_defconfig
-@@ -0,0 +1,101 @@
+@@ -0,0 +1,107 @@
 +CONFIG_ARM=y
 +CONFIG_ARCH_IMX8=y
 +CONFIG_SYS_TEXT_BASE=0x80020000
@@ -1550,7 +1550,9 @@ index 0000000000..175727020f
 +CONFIG_FASTBOOT_USB_DEV=1
 +CONFIG_FASTBOOT_FLASH=y
 +CONFIG_FASTBOOT_FLASH_MMC_DEV=0
-+# CONFIG_CMD_IMPORTENV is not set
++CONFIG_SYS_PROMPT="CL-SOM-iMX8X # "
++CONFIG_CMD_GREPENV=y
++CONFIG_CMD_ENV_FLAGS=y
 +CONFIG_CMD_EEPROM=y
 +CONFIG_CMD_EEPROM_LAYOUT=y
 +CONFIG_EEPROM_LAYOUT_HELP_STRING="v2, v3, v4"
@@ -1617,16 +1619,20 @@ index 0000000000..175727020f
 +CONFIG_USB_GADGET_MANUFACTURER="FSL"
 +CONFIG_USB_GADGET_VENDOR_NUM=0x0525
 +CONFIG_USB_GADGET_PRODUCT_NUM=0xa4a5
++CONFIG_SPL_USB_HOST_SUPPORT=y
++CONFIG_SPL_USB_GADGET_SUPPORT=y
++CONFIG_SPL_USB_SDP_SUPPORT=y
++CONFIG_SPL_SDP_USB_DEV=1
 +CONFIG_SDP_LOADADDR=0x80400000
 +CONFIG_PANIC_HANG=y
 +CONFIG_SPL_TINY_MEMSET=y
 +# CONFIG_EFI_LOADER is not set
 diff --git a/include/configs/cl-som-imx8x.h b/include/configs/cl-som-imx8x.h
 new file mode 100644
-index 0000000000..72cdcd0797
+index 0000000000..4861b0f938
 --- /dev/null
 +++ b/include/configs/cl-som-imx8x.h
-@@ -0,0 +1,363 @@
+@@ -0,0 +1,312 @@
 +/*
 + * Copyright 2019 CompuLab
 + *
@@ -1708,7 +1714,6 @@ index 0000000000..72cdcd0797
 +#define CONFIG_OF_BOARD_SETUP
 +
 +#undef CONFIG_CMD_EXPORTENV
-+#undef CONFIG_CMD_IMPORTENV
 +#undef CONFIG_CMD_IMLS
 +
 +#undef CONFIG_CMD_CRC32
@@ -1776,93 +1781,43 @@ index 0000000000..72cdcd0797
 +#define AHAB_ENV "sec_boot=no\0"
 +#endif
 +
-+#define CONFIG_MFG_ENV_SETTINGS \
-+	CONFIG_MFG_ENV_SETTINGS_DEFAULT \
-+	"initrd_addr=0x83100000\0" \
-+	"initrd_high=0xffffffffffffffff\0" \
-+	"bootcmd_mfg=run mfgtool_args;booti ${loadaddr} ${initrd_addr} ${fdt_addr};\0" \
-+/* Initial environment variables */
-+#define CONFIG_EXTRA_ENV_SETTINGS		\
-+	CONFIG_MFG_ENV_SETTINGS \
-+	AHAB_ENV \
-+	"bootcmd=mmc rescan; run boot_sd; run boot_emmc\0" \
-+	"boot_emmc=setenv mmcdev 0; setenv mmcroot /dev/mmcblk0p2; run mmcargs; run load_mmc && run boot_os\0" \
-+	"boot_os=booti ${loadaddr} - ${fdt_addr}\0" \
-+	"boot_sd=setenv mmcdev 1; setenv mmcroot /dev/mmcblk1p2; run mmcargs; run load_mmc && run boot_os\0" \
-+	"load_emmc=load mmc ${mmcdev} ${loadaddr} ${image} && load mmc ${mmcdev} ${fdt_addr} ${fdt_file}\0" \
-+	"load_mmc=fatload mmc ${mmcdev} ${loadaddr} ${image} && fatload mmc ${mmcdev} ${fdt_addr} ${fdt_file}\0" \
-+	"script=boot.scr\0" \
-+	"image=Image\0" \
-+	"panel=NULL\0" \
-+	"console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200\0" \
-+	"fdt_addr=0x83000000\0"			\
-+	"fdt_high=0xffffffffffffffff\0"		\
-+	"boot_fdt=try\0" \
-+	"fdt_file=sb-imx8x.dtb\0" \
-+	"initrd_addr=0x83100000\0" \
-+	"initrd_high=0xffffffffffffffff\0" \
-+	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
-+	"mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
-+	"mmcautodetect=yes\0" \
-+	"mmcargs=setenv bootargs console=${console} root=/dev/mmcblk${mmcdev}p2 rootwait rw\0 " \
-+	"loadbootscript=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${script};\0" \
-+	"bootscript=echo Running bootscript from mmc ...; " \
-+		"source\0" \
-+	"loadimage=load mmc ${mmcdev}:${mmcpart} ${loadaddr} ${image}\0" \
-+	"loadfdt=load mmc ${mmcdev}:${mmcpart} ${fdt_addr} ${fdt_file}\0" \
-+	"mmcboot=echo Booting from mmc ...; " \
-+		"run mmcargs; " \
-+		"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
-+			"if run loadfdt; then " \
-+				"booti ${loadaddr} - ${fdt_addr}; " \
-+			"else " \
-+				"echo WARN: Cannot load the DT; " \
-+			"fi; " \
-+		"else " \
-+			"echo wait for boot; " \
-+		"fi;\0" \
-+	"autoload=off\0" \
-+	"netargs=setenv bootargs console=${console} " \
-+		"root=/dev/nfs " \
-+		"ip=dhcp nfsroot=${serverip}:${nfsroot},v3,tcp\0" \
-+	"netboot=echo Booting from net ...; " \
-+		"run netargs;  " \
-+		"if test ${ip_dyn} = yes; then " \
-+			"setenv get_cmd dhcp; " \
-+		"else " \
-+			"setenv get_cmd tftp; " \
-+		"fi; " \
-+		"if test ${sec_boot} = yes; then " \
-+			"${get_cmd} ${cntr_addr} ${cntr_file}; " \
-+			"if run auth_os; then " \
-+				"run boot_os; " \
-+			"else " \
-+				"echo ERR: failed to authenticate; " \
-+			"fi; " \
-+		"else " \
-+			"${get_cmd} ${loadaddr} ${image}; " \
-+			"if test ${boot_fdt} = yes || test ${boot_fdt} = try; then " \
-+				"if ${get_cmd} ${fdt_addr} ${fdt_file}; then " \
-+					"booti ${loadaddr} - ${fdt_addr}; " \
-+				"else " \
-+					"echo WARN: Cannot load the DT; " \
-+				"fi; " \
-+			"else " \
-+				"booti; " \
-+			"fi;" \
-+		"fi;\0"
++#define CONFIG_EXTRA_ENV_SETTINGS        \
++    AHAB_ENV \
++    "boot_emmc=setenv mmcdev 0; setenv mmcroot /dev/mmcblk0p2; " \
++        "run mmcargs; run load_mmc && run boot_os\0" \
++    "boot_os=booti ${loadaddr} - ${fdt_addr}\0" \
++    "boot_sd=setenv mmcdev 1; mmc dev ${mmcdev} && " \
++        "setenv mmcroot /dev/mmcblk1p2 && run mmcargs && " \
++        "run load_mmc && run boot_os\0" \
++    "boot_sd_script=setenv mmcdev 1; mmc dev ${mmcdev} && " \
++        "if run loadbootscript; then " \
++            "run bootscript; " \
++        "fi\0" \
++    "load_mmc=fatload mmc ${mmcdev} ${loadaddr} ${image} && " \
++        "fatload mmc ${mmcdev} ${fdt_addr} ${fdt_file}\0" \
++    "script=boot.scr\0" \
++    "image=Image\0" \
++    "panel=NULL\0" \
++    "console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200\0" \
++    "fdt_addr=0x83000000\0"            \
++    "fdt_high=0xffffffffffffffff\0"        \
++    "fdt_file=sb-imx8x.dtb\0" \
++    "initrd_addr=0x83100000\0" \
++    "initrd_high=0xffffffffffffffff\0" \
++    "mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
++    "mmcpart=" __stringify(CONFIG_SYS_MMC_IMG_LOAD_PART) "\0" \
++    "mmcautodetect=yes\0" \
++    "mmcargs=setenv bootargs console=${console} " \
++        "root=/dev/mmcblk${mmcdev}p2 rootwait rw\0" \
++    "loadbootscript=load mmc ${mmcdev}:${mmcpart} ${loadaddr} " \
++        "${script};\0" \
++    "bootscript=echo Running bootscript ...; " \
++        "source\0" \
++    "autoload=off\0"
 +
 +#define CONFIG_BOOTCOMMAND \
-+	   "mmc dev ${mmcdev}; if mmc rescan; then " \
-+		   "if run loadbootscript; then " \
-+			   "run bootscript; " \
-+		   "else " \
-+			   "if run loadimage; then " \
-+				   "run mmcboot; " \
-+			   "else booti ${loadaddr} - ${fdt_addr}; " \
-+			   "fi; " \
-+		   "fi; " \
-+	   "else booti ${loadaddr} - ${fdt_addr}; fi"
++    "echo SD boot attempt ... && run boot_sd_script || run boot_sd || " \
++        "echo eMMC boot attempt ... && run boot_emmc "
 +
 +/* Link Definitions */
 +#define CONFIG_LOADADDR			0x80280000
@@ -1898,7 +1853,7 @@ index 0000000000..72cdcd0797
 +#define CONFIG_SYS_MALLOC_LEN		((CONFIG_ENV_SIZE + (32*1024)) * 1024)
 +
 +#define CONFIG_SYS_SDRAM_BASE		0x80000000
-+#define CONFIG_NR_DRAM_BANKS		4
++#define CONFIG_NR_DRAM_BANKS		2
 +#define PHYS_SDRAM_1			0x80000000
 +#define PHYS_SDRAM_2			0x880000000
 +#define PHYS_SDRAM_1_SIZE		0x80000000	/* 2 GB */
