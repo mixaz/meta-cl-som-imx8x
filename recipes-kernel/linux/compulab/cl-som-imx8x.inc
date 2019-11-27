@@ -9,5 +9,8 @@ SRC_URI_append = " \
 	file://0008-sb-imx8x-enable-the-Goodix-touch-panel.patch \
 	file://0009-sb-imx8x-enable-RS485-UART.patch \
 	file://0010-sb-imx8x-add-mipi-panel-backlight.patch \
+	file://0011-cl-som-imx8x-release-kernel-v4.14.98-cl-som-imx8x-1..patch \
+	file://0012-sb-imx8x-enable-VPU-decoding.patch \
+	file://0013-cl-som-imx8x-release-kernel-v4.14.98-cl-som-imx8x-1..patch \
 	file://defconfig \
 "

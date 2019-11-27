@@ -1,7 +1,7 @@
 From fd7f2af14850d7d82c026702cfaec3cf7bd20cfe Mon Sep 17 00:00:00 2001
 From: Uri Mashiach <uri.mashiach@compulab.co.il>
 Date: Tue, 3 Sep 2019 15:01:00 +0300
-Subject: [PATCH 06/10] startek-ili9881c: cl-som-imx8x: add panel support
+Subject: [PATCH 06/13] startek-ili9881c: cl-som-imx8x: add panel support
 
 Signed-off-by: Uri Mashiach <uri.mashiach@compulab.co.il>
 ---
