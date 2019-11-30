@@ -24,3 +24,6 @@ SRC_URI_append_cl-som-imx8x = " \
 	file://0023-compatibility-Add-i2c_read-and-i2c_write-by-DM_I2C-p.patch  \
 	file://cl-som-imx8x_defconfig 						\
 "
+
+PACKAGE_ARCH = "${MACHINE_ARCH}"
+COMPATIBLE_MACHINE_cl-som-imx8x = "cl-som-imx8x"

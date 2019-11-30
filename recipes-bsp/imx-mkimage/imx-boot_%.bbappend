@@ -7,3 +7,5 @@ do_install () {
         install -m 0644 ${S}/${IMX_BOOT_IMG_NAME_LONG} ${D}/boot/${IMX_BOOT_IMG_NAME}
     done
 }
+
+COMPATIBLE_MACHINE_cl-som-imx8x = "cl-som-imx8x"

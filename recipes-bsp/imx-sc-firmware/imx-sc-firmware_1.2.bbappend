@@ -11,4 +11,4 @@ do_deploy() {
 	ln -sf ${SC_FIRMWARE_NAME} ${DEPLOYDIR}/${BOOT_TOOLS}/${symlink_name}
 }
 
-COMPATIBLE_MACHINE = "(cl-som-imx8x)"
+COMPATIBLE_MACHINE_cl-som-imx8x = "cl-som-imx8x"

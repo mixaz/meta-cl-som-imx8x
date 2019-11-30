@@ -3,7 +3,7 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/compulab/cl-som-imx8x:"
 include compulab/cl-som-imx8x.inc
 
 do_configure_append () {
-    oe_runmake cl-som-imx8x_defconfig
+    oe_runmake ${MACHINE}_defconfig
 }
 
-COMPATIBLE_MACHINE = "(cl-som-imx8x)"
+COMPATIBLE_MACHINE_cl-som-imx8x = "cl-som-imx8x"
