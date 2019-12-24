@@ -1604,7 +1604,7 @@ index 0000000000..d2dd955cde
 +#define CONFIG_PHY_ATHEROS
 +
 +/* ENET0 connects AR8031 on CPU board, ENET1 connects to base board and MUX with ESAI, default is ESAI */
-+#define CONFIG_FEC_ENET_DEV 0
++#define CONFIG_FEC_ENET_DEV 1
 +
 +#if (CONFIG_FEC_ENET_DEV == 0)
 +#define IMX_FEC_BASE			0x5B040000
